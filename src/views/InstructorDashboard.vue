@@ -6,7 +6,10 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+<<<<<<< HEAD
 import api from '@/services/api'
+=======
+>>>>>>> d200206 (Initial commit)
 
 interface Student {
   id: number
@@ -199,7 +202,11 @@ async function fetchAllStudents() {
       return
     }
 
+<<<<<<< HEAD
     const { data } = await api.get('/api/users')
+=======
+    const { data } = await axios.get('/api/users')
+>>>>>>> d200206 (Initial commit)
     console.log('All users from API:', data)
 
     // Get instructor's schools (assuming schools are comma-separated)
@@ -294,7 +301,11 @@ const profile = ref<{ name: string; email: string; school?: string; dob?: string
 async function fetchProfile() {
   try {
     if (!userStore.user || !userStore.user.email) return
+<<<<<<< HEAD
     const { data } = await api.post('/api/auth/profile', { email: userStore.user.email })
+=======
+    const { data } = await axios.post('/api/auth/profile', { email: userStore.user.email })
+>>>>>>> d200206 (Initial commit)
     profile.value = {
       name: data.name,
       email: data.email,
@@ -325,7 +336,11 @@ async function resetStudent(student: Student) {
 }
 
 async function fetchAttendanceRecords(studentId: string) {
+<<<<<<< HEAD
   const { data } = await api.get(`/api/attendance/by-student/${studentId}`)
+=======
+  const { data } = await axios.get(`/api/attendance/by-student/${studentId}`)
+>>>>>>> d200206 (Initial commit)
   attendanceRecords.value[studentId] = data
   return data
 }
@@ -344,7 +359,11 @@ async function fetchAttendanceForVisibleStudents() {
 async function markPresent(student: Student) {
   try {
     const now = new Date().toISOString()
+<<<<<<< HEAD
     await api.post('/api/attendance/mark', {
+=======
+    await axios.post('/api/attendance/mark', {
+>>>>>>> d200206 (Initial commit)
       student_id: student.id,
       status: 'present',
       date: now,
@@ -359,7 +378,11 @@ async function markPresent(student: Student) {
 async function markAbsent(student: Student) {
   try {
     const now = new Date().toISOString()
+<<<<<<< HEAD
     await api.post('/api/attendance/mark', {
+=======
+    await axios.post('/api/attendance/mark', {
+>>>>>>> d200206 (Initial commit)
       student_id: student.id,
       status: 'absent',
       date: now,
@@ -384,7 +407,11 @@ function closeAttendanceModal() {
 
 async function approveStudent(student: Student) {
   try {
+<<<<<<< HEAD
     await api.post(`/api/students/approve/${student.id}`)
+=======
+    await axios.post(`/api/students/approve/${student.id}`)
+>>>>>>> d200206 (Initial commit)
     student.is_active = true
     snackbar.trigger('Student approved!', 'success')
     fetchAllStudents()
@@ -499,7 +526,11 @@ function startEditProfile() {
 async function saveProfile() {
   try {
     if (!userStore.user) throw new Error('User not found')
+<<<<<<< HEAD
     await api.put(`/api/users/${userStore.user.id}`, profileForm.value)
+=======
+    await axios.put(`/api/users/${userStore.user.id}`, profileForm.value)
+>>>>>>> d200206 (Initial commit)
     profile.value = { ...profileForm.value }
     editingProfile.value = false
     snackbar.trigger('Profile updated!', 'success')
@@ -815,7 +846,11 @@ async function saveEditAttendance() {
   const { student, newStatus } = editAttendanceModal.value
   if (!student) return
   try {
+<<<<<<< HEAD
     await api.put(`/api/attendance/by-student/${student.studentId}`, { status: newStatus })
+=======
+    await axios.put(`/api/attendance/by-student/${student.studentId}`, { status: newStatus })
+>>>>>>> d200206 (Initial commit)
     snackbar.trigger('Attendance updated!', 'success')
     await fetchAttendanceRecords(student.studentId)
     closeEditAttendanceModal()

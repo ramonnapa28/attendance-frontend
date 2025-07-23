@@ -13,7 +13,11 @@ import {
   updateInstructor as apiUpdateInstructor,
   unarchiveSchool as apiUnarchiveSchool,
 } from '@/services/api'
+<<<<<<< HEAD
 import api from '@/services/api'
+=======
+import axios from 'axios'
+>>>>>>> d200206 (Initial commit)
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { useSnackbarStore } from '@/stores/snackbar'
@@ -245,7 +249,11 @@ async function assignSchoolsToInstructor() {
 
 async function fetchStudents() {
   try {
+<<<<<<< HEAD
     const { data } = await api.get('/api/users')
+=======
+    const { data } = await axios.get('/api/users')
+>>>>>>> d200206 (Initial commit)
     students.value = data
       .filter((u: any) => u.role === 'student')
       .map((u: any) => ({
@@ -417,7 +425,11 @@ function countAttendance(studentId: string, status: 'present' | 'absent'): numbe
 
 // Fetch attendance records for all students on mount
 async function fetchAttendanceRecords(studentId: string) {
+<<<<<<< HEAD
   const { data } = await api.get(`/api/attendance/by-student/${studentId}`)
+=======
+  const { data } = await axios.get(`/api/attendance/by-student/${studentId}`)
+>>>>>>> d200206 (Initial commit)
   attendanceRecords.value[studentId] = data
   return data
 }

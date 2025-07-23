@@ -19,6 +19,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
+<<<<<<< HEAD
       // This will proxy all /api requests to your FastAPI backend
       '/api': {
         target: 'http://localhost:8000',
@@ -26,6 +27,9 @@ export default defineConfig({
         // If your backend doesn't use /api as a prefix, set rewrite
         // rewrite: (path) => path.replace(/^\/api/, ''),
     },
+=======
+      '/api': 'http://localhost:8000'
+>>>>>>> d200206 (Initial commit)
     }
   }
 })

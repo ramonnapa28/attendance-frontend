@@ -3,7 +3,11 @@ import ProfileForm from '@/components/forms/ProfileForm.vue'
 import AttendanceSummary from '@/components/common/AttendanceSummary.vue'
 import QRCodeDisplay from '@/components/common/QRCodeDisplay.vue'
 import { ref, computed, onMounted } from 'vue'
+<<<<<<< HEAD
 import api from '@/services/api' // ✅ Use the configured API instance
+=======
+import axios from 'axios'
+>>>>>>> d200206 (Initial commit)
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 
@@ -26,6 +30,10 @@ const attendance = ref({ present: 0, absent: 0, total: 0 })
 const attendanceRecords = ref<{ date: string; status: string }[]>([])
 const lastAttendance = computed(() => {
   if (!attendanceRecords.value.length) return null
+<<<<<<< HEAD
+=======
+  // Sort by date descending
+>>>>>>> d200206 (Initial commit)
   return [...attendanceRecords.value].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   )[0]
@@ -37,20 +45,31 @@ onMounted(async () => {
   loading.value = true
   error.value = ''
   try {
+<<<<<<< HEAD
     // ✅ Get school list
     const schoolsRes = await api.get('/api/schools')
     schools.value = schoolsRes.data.map((s: any) => ({ id: String(s.id), name: s.name }))
 
     // ✅ Check for user
+=======
+    // Fetch schools from backend
+    const schoolsRes = await axios.get('/api/schools')
+    schools.value = schoolsRes.data.map((s: any) => ({ id: String(s.id), name: s.name }))
+>>>>>>> d200206 (Initial commit)
     if (!userStore.user || !userStore.user.email) {
       error.value = 'Not logged in.'
       return
     }
+<<<<<<< HEAD
 
     // ✅ Get profile
     const { data } = await api.post('/api/auth/profile', {
       email: userStore.user.email,
     })
+=======
+    // Fetch the logged-in user's profile from the backend
+    const { data } = await axios.post('/api/auth/profile', { email: userStore.user.email })
+>>>>>>> d200206 (Initial commit)
     profile.value = {
       name: data.name,
       email: data.email,
@@ -58,6 +77,7 @@ onMounted(async () => {
       school: data.school || '',
       dob: data.dob || '',
     }
+<<<<<<< HEAD
 
     // ✅ Get attendance summary
     if (data.id) {
@@ -72,6 +92,18 @@ onMounted(async () => {
     }
   } catch (e) {
     console.error('Error loading profile:', e)
+=======
+    // Fetch attendance summary and records for this student
+    if (data.id) {
+      const summaryRes = await axios.get(`/api/attendance/summary/${data.id}`)
+      attendance.value = summaryRes.data
+    }
+    if (profile.value.studentId) {
+      const recordsRes = await axios.get(`/api/attendance/by-student/${profile.value.studentId}`)
+      attendanceRecords.value = recordsRes.data
+    }
+  } catch (e) {
+>>>>>>> d200206 (Initial commit)
     error.value = 'Failed to load profile.'
   } finally {
     loading.value = false
@@ -81,6 +113,10 @@ onMounted(async () => {
 function toPhilippineTime(dateStr: string): string {
   if (!dateStr) return '-'
   const date = new Date(dateStr)
+<<<<<<< HEAD
+=======
+  // Convert to UTC+8
+>>>>>>> d200206 (Initial commit)
   const utc = date.getTime() + date.getTimezoneOffset() * 60000
   const phTime = new Date(utc + 8 * 60 * 60 * 1000)
   return phTime.toLocaleString('en-PH', {
@@ -95,22 +131,35 @@ function toPhilippineTime(dateStr: string): string {
 
 const schoolName = computed(() => {
   if (!profile.value.school) return ''
+<<<<<<< HEAD
+=======
+  // Try to match by name or id
+>>>>>>> d200206 (Initial commit)
   const found = schools.value.find(
     (s) => s.name === profile.value.school || s.id === profile.value.school,
   )
   return found ? found.name : profile.value.school
 })
 
+<<<<<<< HEAD
+=======
+// Use VITE_FRONTEND_URL for production, fallback to current origin for dev
+>>>>>>> d200206 (Initial commit)
 const BASE_URL = import.meta.env.VITE_FRONTEND_URL || window.location.origin
 const qrValue = computed(() =>
   profile.value.studentId
     ? `${BASE_URL}/student-info?id=${encodeURIComponent(profile.value.studentId)}`
     : '',
 )
+<<<<<<< HEAD
 
 const router = useRouter()
 const showLogoutConfirm = ref(false)
 
+=======
+const router = useRouter()
+const showLogoutConfirm = ref(false)
+>>>>>>> d200206 (Initial commit)
 function openLogoutConfirm() {
   showLogoutConfirm.value = true
 }
@@ -118,13 +167,20 @@ function closeLogoutConfirm() {
   showLogoutConfirm.value = false
 }
 function confirmLogout() {
+<<<<<<< HEAD
   userStore.logout?.()
+=======
+  userStore.logout?.() // If logout method exists
+>>>>>>> d200206 (Initial commit)
   closeLogoutConfirm()
   router.push('/login')
 }
 </script>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> d200206 (Initial commit)
 <template>
   <div
     class="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-100 via-white to-emerald-200 py-10"

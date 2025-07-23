@@ -457,6 +457,7 @@ if __name__ == "__main__":
     db = next(get_db())
     create_default_super_admin(db)
     import uvicorn
+<<<<<<< HEAD
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 # To run the application, use the following command:
@@ -466,3 +467,6 @@ if __name__ == "__main__":
 
 # If you need to generate or update the requirements.txt file, run the following command:
 # pip freeze > requirements.txt
+=======
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+>>>>>>> d200206 (Initial commit)

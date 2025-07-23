@@ -5,7 +5,10 @@ import { useRouter } from 'vue-router'
 import { useSnackbarStore } from '@/stores/snackbar'
 import { getSchools, updateUser } from '@/services/api'
 import axios from 'axios'
+<<<<<<< HEAD
 import api from '@/services/api'
+=======
+>>>>>>> d200206 (Initial commit)
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -59,7 +62,11 @@ onMounted(async () => {
     const email = localStorage.getItem('registeredEmail')
     if (email) {
       try {
+<<<<<<< HEAD
         const { data: users } = await api.get('/api/users')
+=======
+        const { data: users } = await axios.get('/api/users')
+>>>>>>> d200206 (Initial commit)
         const found = users.find((u: any) => u.email === email)
         if (found) userStore.login(found)
       } catch (e) {
