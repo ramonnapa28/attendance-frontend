@@ -40,12 +40,12 @@ export const useUserStore = defineStore('user', () => {
   }
 
   async function loginApi(email: string, password: string) {
-    const { data } = await api.post('api/auth/login', { email, password })
+    const { data } = await api.post('/auth/login', { email, password })
     login(data.user)
   }
 
   async function registerApi(payload: RegisterPayload) {
-    const { data } = await api.post('api/auth/register', payload)
+    const { data } = await api.post('/auth/register', payload)
     login(data.user)
   }
 
