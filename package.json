@@ -45,11 +45,7 @@
     "typescript": "~5.8.0",
     "vite": "^6.2.4",
     "vite-plugin-vue-devtools": "^7.7.2",
-<<<<<<< HEAD
     "vitest": "^3.2.4",
-=======
-    "vitest": "^3.1.1",
->>>>>>> d200206 (Initial commit)
     "vue-tsc": "^2.2.8"
   }
 }
