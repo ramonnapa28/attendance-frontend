@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 # attendance-system
 
-=======
-<<<<<<< HEAD
-# attendance-system
-=======
->>>>>>> d200206 (Initial commit)
 # frontend
 
 This template should help get you started developing with Vue 3 in Vite.
@@ -52,8 +46,3 @@ pnpm test:unit
 pnpm lint
 ```
 >>>>>>> e377c9a (Initial commit)
-<<<<<<< HEAD
-# attendance-system
->>>>>>> ad07c04 (Initial commit)
-=======
->>>>>>> d200206 (Initial commit)
