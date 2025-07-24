@@ -1,0 +1,20 @@
+/* Minimal base.css for Tailwind app */
+:root {
+  --vt-c-white: #ffffff;
+  --vt-c-black: #181818;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  background: var(--vt-c-white);
+  color: var(--vt-c-black);
+  font-family: system-ui, sans-serif;
+}
