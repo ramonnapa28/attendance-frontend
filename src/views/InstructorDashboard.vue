@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, onBeforeUnmount, watch } from 'vue'
-import axios from 'axios'
 import { useSnackbarStore } from '@/stores/snackbar'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-<<<<<<< HEAD
 import api from '@/services/api'
-=======
->>>>>>> d200206 (Initial commit)
+
 
 interface Student {
   id: number
@@ -163,7 +160,7 @@ function goToSummaryPage(p: number) {
   if (p >= 1 && p <= summaryTotalPages.value) summaryPage.value = p
 }
 
-const menuOpen = ref<number | null>(null)
+// const menuOpen = ref<number | null>(null)
 const profileMenuOpen = ref(false)
 function toggleProfileMenu() {
   profileMenuOpen.value = !profileMenuOpen.value
@@ -172,16 +169,6 @@ function closeProfileMenu() {
   profileMenuOpen.value = false
 }
 
-const sectionKeys = [
-  'approval',
-  'mark',
-  'students',
-  'summary',
-  'profile',
-  'report-students',
-  'report-summary',
-  'report-per-student',
-]
 const activeSection = ref('approval')
 
 function setSection(section: string) {
@@ -202,11 +189,7 @@ async function fetchAllStudents() {
       return
     }
 
-<<<<<<< HEAD
     const { data } = await api.get('/api/users')
-=======
-    const { data } = await axios.get('/api/users')
->>>>>>> d200206 (Initial commit)
     console.log('All users from API:', data)
 
     // Get instructor's schools (assuming schools are comma-separated)
@@ -216,17 +199,20 @@ async function fetchAllStudents() {
 
     // For approval section: show all students from all assigned schools
     if (activeSection.value === 'approval') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       students.value = data.filter((u: any) => u.role === 'student' && schools.includes(u.school))
       console.log('Students for approval (all schools):', students.value)
     } else {
       // For view students section: filter by selected school
       if (selectedSchool.value) {
         students.value = data.filter(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (u: any) => u.role === 'student' && u.school === selectedSchool.value,
         )
         console.log('Students for selected school:', students.value)
       } else {
         // Show all students from all assigned schools
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         students.value = data.filter((u: any) => u.role === 'student' && schools.includes(u.school))
         console.log('All students from assigned schools:', students.value)
       }
@@ -242,22 +228,22 @@ async function fetchAllStudents() {
   }
 }
 
-function toggleMenu(studentId: number) {
-  menuOpen.value = menuOpen.value === studentId ? null : studentId
-}
+// function toggleMenu(studentId: number) {
+//   menuOpen.value = menuOpen.value === studentId ? null : studentId
+// }
 
-function closeMenu() {
-  menuOpen.value = null
-}
+// function closeMenu() {
+//   menuOpen.value = null
+// }
 
-function handleClickOutside(event: MouseEvent) {
-  const menus = document.querySelectorAll('.action-menu')
-  let clickedInside = false
-  menus.forEach((menu) => {
-    if (menu.contains(event.target as Node)) clickedInside = true
-  })
-  if (!clickedInside) closeMenu()
-}
+// function handleClickOutside(event: MouseEvent) {
+//   const menus = document.querySelectorAll('.action-menu')
+//   let clickedInside = false
+//   menus.forEach((menu) => {
+//     if (menu.contains(event.target as Node)) clickedInside = true
+//   })
+//   if (!clickedInside) closeMenu()
+// }
 
 // Report menu dropdown logic with delay on close
 const reportMenuOpen = ref(false)
@@ -301,11 +287,7 @@ const profile = ref<{ name: string; email: string; school?: string; dob?: string
 async function fetchProfile() {
   try {
     if (!userStore.user || !userStore.user.email) return
-<<<<<<< HEAD
     const { data } = await api.post('/api/auth/profile', { email: userStore.user.email })
-=======
-    const { data } = await axios.post('/api/auth/profile', { email: userStore.user.email })
->>>>>>> d200206 (Initial commit)
     profile.value = {
       name: data.name,
       email: data.email,
@@ -330,17 +312,14 @@ async function resetStudent(student: Student) {
     student.is_active = false
     snackbar.trigger('Student account reset!', 'success')
     fetchAllStudents()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     snackbar.trigger('Failed to reset student account', 'error')
   }
 }
 
 async function fetchAttendanceRecords(studentId: string) {
-<<<<<<< HEAD
   const { data } = await api.get(`/api/attendance/by-student/${studentId}`)
-=======
-  const { data } = await axios.get(`/api/attendance/by-student/${studentId}`)
->>>>>>> d200206 (Initial commit)
   attendanceRecords.value[studentId] = data
   return data
 }
@@ -359,17 +338,14 @@ async function fetchAttendanceForVisibleStudents() {
 async function markPresent(student: Student) {
   try {
     const now = new Date().toISOString()
-<<<<<<< HEAD
     await api.post('/api/attendance/mark', {
-=======
-    await axios.post('/api/attendance/mark', {
->>>>>>> d200206 (Initial commit)
       student_id: student.id,
       status: 'present',
       date: now,
     })
     snackbar.trigger(`${student.name} marked as present!`, 'success')
     await fetchAttendanceForVisibleStudents()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     snackbar.trigger('Failed to mark student as present', 'error')
   }
@@ -378,17 +354,14 @@ async function markPresent(student: Student) {
 async function markAbsent(student: Student) {
   try {
     const now = new Date().toISOString()
-<<<<<<< HEAD
     await api.post('/api/attendance/mark', {
-=======
-    await axios.post('/api/attendance/mark', {
->>>>>>> d200206 (Initial commit)
       student_id: student.id,
       status: 'absent',
       date: now,
     })
     snackbar.trigger(`${student.name} marked as absent!`, 'success')
     await fetchAttendanceForVisibleStudents()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     snackbar.trigger('Failed to mark student as absent', 'error')
   }
@@ -407,14 +380,11 @@ function closeAttendanceModal() {
 
 async function approveStudent(student: Student) {
   try {
-<<<<<<< HEAD
     await api.post(`/api/students/approve/${student.id}`)
-=======
-    await axios.post(`/api/students/approve/${student.id}`)
->>>>>>> d200206 (Initial commit)
     student.is_active = true
     snackbar.trigger('Student approved!', 'success')
     fetchAllStudents()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     snackbar.trigger('Failed to approve student', 'error')
   }
@@ -526,15 +496,12 @@ function startEditProfile() {
 async function saveProfile() {
   try {
     if (!userStore.user) throw new Error('User not found')
-<<<<<<< HEAD
     await api.put(`/api/users/${userStore.user.id}`, profileForm.value)
-=======
-    await axios.put(`/api/users/${userStore.user.id}`, profileForm.value)
->>>>>>> d200206 (Initial commit)
     profile.value = { ...profileForm.value }
     editingProfile.value = false
     snackbar.trigger('Profile updated!', 'success')
     fetchProfile()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     snackbar.trigger('Failed to update profile', 'error')
   }
@@ -550,48 +517,48 @@ const filteredReportStudents = computed(() => {
   return students.value.filter((s) => s.school === reportSchoolFilter.value)
 })
 
-const showReportPreview = ref(false)
-const pdfPreviewUrl = ref('')
+// const showReportPreview = ref(false)
+// const pdfPreviewUrl = ref('')
 
-async function openReportPreview() {
-  // Generate PDF in memory
-  const doc = new jsPDF()
-  doc.setFontSize(14)
-  doc.text('Student Report', 14, 18)
-  const headers = ['#', 'Name', 'Email', 'Student ID', 'School', 'Status']
-  const rows = filteredReportStudents.value.map((s, idx) => [
-    (idx + 1).toString(),
-    s.name,
-    s.email,
-    s.studentId,
-    s.school || '',
-    s.is_active ? 'Active' : 'Pending Approval',
-  ])
-  // Simple table rendering
-  let y = 30
-  doc.setFontSize(11)
-  doc.text(headers, 14, y)
-  y += 8
-  rows.forEach((row) => {
-    doc.text(row, 14, y)
-    y += 8
-    if (y > 270) {
-      doc.addPage()
-      y = 20
-    }
-  })
-  // Create Blob URL for preview
-  const pdfBlob = doc.output('blob')
-  pdfPreviewUrl.value = URL.createObjectURL(pdfBlob)
-  showReportPreview.value = true
-}
-function closeReportPreview() {
-  showReportPreview.value = false
-  if (pdfPreviewUrl.value) {
-    URL.revokeObjectURL(pdfPreviewUrl.value)
-    pdfPreviewUrl.value = ''
-  }
-}
+// async function openReportPreview() {
+//   // Generate PDF in memory
+//   const doc = new jsPDF()
+//   doc.setFontSize(14)
+//   doc.text('Student Report', 14, 18)
+//   const headers = ['#', 'Name', 'Email', 'Student ID', 'School', 'Status']
+//   const rows = filteredReportStudents.value.map((s, idx) => [
+//     (idx + 1).toString(),
+//     s.name,
+//     s.email,
+//     s.studentId,
+//     s.school || '',
+//     s.is_active ? 'Active' : 'Pending Approval',
+//   ])
+//   // Simple table rendering
+//   let y = 30
+//   doc.setFontSize(11)
+//   doc.text(headers, 14, y)
+//   y += 8
+//   rows.forEach((row) => {
+//     doc.text(row, 14, y)
+//     y += 8
+//     if (y > 270) {
+//       doc.addPage()
+//       y = 20
+//     }
+//   })
+//   // Create Blob URL for preview
+//   const pdfBlob = doc.output('blob')
+//   pdfPreviewUrl.value = URL.createObjectURL(pdfBlob)
+//   showReportPreview.value = true
+// }
+// // function closeReportPreview() {
+// //   showReportPreview.value = false
+// //   if (pdfPreviewUrl.value) {
+// //     URL.revokeObjectURL(pdfPreviewUrl.value)
+// //     pdfPreviewUrl.value = ''
+// //   }
+// // }
 function downloadReport() {
   const doc = new jsPDF()
   doc.setFontSize(14)
@@ -622,35 +589,35 @@ function downloadReport() {
   window.open(url, '_blank')
 }
 
-// Attendance summary for report: grouped by school
-const groupedAttendanceSummary = computed(() => {
-  const summary: Record<
-    string,
-    {
-      school: string
-      status: string
-      totalStudents: number
-      totalPresents: number
-      totalAbsences: number
-    }
-  > = {}
-  students.value.forEach((s) => {
-    const school = s.school || 'No school assigned'
-    if (!summary[school]) {
-      summary[school] = {
-        school,
-        status: s.is_active ? 'Active' : 'Pending Approval',
-        totalStudents: 0,
-        totalPresents: 0,
-        totalAbsences: 0,
-      }
-    }
-    summary[school].totalStudents++
-    summary[school].totalPresents += s.totalPresents || 0
-    summary[school].totalAbsences += s.totalAbsences || 0
-  })
-  return Object.values(summary)
-})
+// // Attendance summary for report: grouped by school
+// const groupedAttendanceSummary = computed(() => {
+//   const summary: Record<
+//     string,
+//     {
+//       school: string
+//       status: string
+//       totalStudents: number
+//       totalPresents: number
+//       totalAbsences: number
+//     }
+//   > = {}
+//   students.value.forEach((s) => {
+//     const school = s.school || 'No school assigned'
+//     if (!summary[school]) {
+//       summary[school] = {
+//         school,
+//         status: s.is_active ? 'Active' : 'Pending Approval',
+//         totalStudents: 0,
+//         totalPresents: 0,
+//         totalAbsences: 0,
+//       }
+//     }
+//     summary[school].totalStudents++
+//     summary[school].totalPresents += s.totalPresents || 0
+//     summary[school].totalAbsences += s.totalAbsences || 0
+//   })
+//   return Object.values(summary)
+// })
 
 function downloadReportSummary() {
   if (summaryReportSelectedSchools.value.length === 0) {
@@ -846,14 +813,11 @@ async function saveEditAttendance() {
   const { student, newStatus } = editAttendanceModal.value
   if (!student) return
   try {
-<<<<<<< HEAD
     await api.put(`/api/attendance/by-student/${student.studentId}`, { status: newStatus })
-=======
-    await axios.put(`/api/attendance/by-student/${student.studentId}`, { status: newStatus })
->>>>>>> d200206 (Initial commit)
     snackbar.trigger('Attendance updated!', 'success')
     await fetchAttendanceRecords(student.studentId)
     closeEditAttendanceModal()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     snackbar.trigger('Failed to update attendance', 'error')
   }
@@ -866,16 +830,16 @@ function countAttendance(studentId: string, status: 'present' | 'absent'): numbe
 }
 
 // Helper to count presents/absences for a school
-function countSchoolAttendance(school: string, status: 'present' | 'absent'): number {
-  return students.value
-    .filter((s) => s.school === school)
-    .reduce((sum, s) => sum + countAttendance(s.studentId, status), 0)
-}
+// function countSchoolAttendance(school: string, status: 'present' | 'absent'): number {
+//   return students.value
+//     .filter((s) => s.school === school)
+//     .reduce((sum, s) => sum + countAttendance(s.studentId, status), 0)
+// }
 
-// Helper to count students in a school
-function countSchoolStudents(school: string): number {
-  return students.value.filter((s) => s.school === school).length
-}
+// // Helper to count students in a school
+// function countSchoolStudents(school: string): number {
+//   return students.value.filter((s) => s.school === school).length
+// }
 
 // Date picker for Attendance Summary report
 const summaryReportDate = ref(new Date().toISOString().slice(0, 10)) // yyyy-mm-dd
@@ -1644,7 +1608,7 @@ function clearSummaryReport() {
               <td>{{ summaryReportDate }}</td>
               <td>
                 <span
-                  v-for="(id, idx) in getSchoolPresentIdsOnDate(school, summaryReportDate).slice(
+                  v-for="(id) in getSchoolPresentIdsOnDate(school, summaryReportDate).slice(
                     0,
                     3,
                   )"
@@ -1670,7 +1634,7 @@ function clearSummaryReport() {
               </td>
               <td>
                 <span
-                  v-for="(id, idx) in getSchoolAbsentIdsOnDate(school, summaryReportDate).slice(
+                  v-for="(id) in getSchoolAbsentIdsOnDate(school, summaryReportDate).slice(
                     0,
                     3,
                   )"

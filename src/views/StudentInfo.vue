@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-<<<<<<< HEAD
 import api from '@/services/api'
 
-const route = useRoute()
-const student = ref(null)
-const error = ref('')
-const loading = ref(true)
-=======
-import axios from 'axios'
+// Define the Student interface to match the expected API response
+interface Student {
+  id: string
+  name: string
+  school?: string // Optional, as you use || 'N/A' in the template
+  studentId: string
+}
 
 const route = useRoute()
-const student = ref<any>(null)
-const loading = ref(true)
-const error = ref('')
->>>>>>> d200206 (Initial commit)
+const student = ref<Student | null>(null) // Explicitly type student as Student or null
+const error = ref<string>('') // Explicitly type error as string
+const loading = ref<boolean>(true) // Explicitly type loading as boolean
 
 onMounted(async () => {
   const id = route.query.id as string
@@ -24,30 +23,24 @@ onMounted(async () => {
     loading.value = false
     return
   }
+
   try {
-<<<<<<< HEAD
     const { data } = await api.get(`/api/students/by-id/${id}`)
-    student.value = data
+    // Ensure the API response matches the Student interface
+    if (data && typeof data === 'object' && 'id' in data && 'name' in data && 'studentId' in data) {
+      student.value = data as Student
+    } else {
+      throw new Error('Invalid student data')
+    }
   } catch (err) {
     error.value = 'No student found or error occurred.'
     console.error(err)
-=======
-    // Use the new endpoint
-    const { data } = await axios.get(`/api/students/by-id/${encodeURIComponent(id)}`)
-    student.value = data
-  } catch (e) {
-    error.value = 'Failed to fetch student data.'
->>>>>>> d200206 (Initial commit)
   } finally {
     loading.value = false
   }
 })
 </script>
 
-<<<<<<< HEAD
-
-=======
->>>>>>> d200206 (Initial commit)
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-100 via-white to-emerald-200 py-10">
     <div class="w-full max-w-md p-8 md:p-12 bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-emerald-100 space-y-8">
@@ -74,8 +67,4 @@ onMounted(async () => {
       </div>
     </div>
   </div>
-<<<<<<< HEAD
 </template>
-=======
-</template> 
->>>>>>> d200206 (Initial commit)

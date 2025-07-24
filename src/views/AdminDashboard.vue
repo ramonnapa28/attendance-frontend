@@ -13,15 +13,10 @@ import {
   updateInstructor as apiUpdateInstructor,
   unarchiveSchool as apiUnarchiveSchool,
 } from '@/services/api'
-<<<<<<< HEAD
 import api from '@/services/api'
-=======
-import axios from 'axios'
->>>>>>> d200206 (Initial commit)
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { useSnackbarStore } from '@/stores/snackbar'
-import Snackbar from '@/components/common/Snackbar.vue'
 
 // Type definitions
 interface Instructor {
@@ -118,9 +113,9 @@ function confirmLogout() {
   closeLogoutConfirm()
   router.push('/login')
 }
-function handleLogout() {
-  openLogoutConfirm()
-}
+// function handleLogout() {
+//   openLogoutConfirm()
+// }
 
 // Snackbar for notifications
 // REMOVE the local snackbar ref and showSnackbar function
@@ -141,6 +136,7 @@ async function fetchSchools() {
   try {
     const { data } = await getSchools()
     schools.value = data
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     snackbarStore.trigger('Failed to load schools', 'error')
   }
@@ -154,6 +150,7 @@ async function addSchool() {
       newSchool.value = ''
       closeSchoolModal()
       snackbarStore.trigger('School added!', 'success')
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       snackbarStore.trigger('Failed to add school', 'error')
     }
@@ -175,6 +172,7 @@ async function updateSchool() {
       s.name = data.name
       editSchool.value = { id: null, name: '' }
       snackbarStore.trigger('School updated!', 'success')
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       snackbarStore.trigger('Failed to update school', 'error')
     }
@@ -186,6 +184,7 @@ async function archiveSchool(school: School) {
     await apiArchiveSchool(school.id)
     school.archived = true
     snackbarStore.trigger('School archived!', 'success')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     snackbarStore.trigger('Failed to archive school', 'error')
   }
@@ -196,6 +195,7 @@ async function unarchiveSchool(school: School) {
     await apiUnarchiveSchool(school.id)
     school.archived = false
     snackbarStore.trigger('School unarchived!', 'success')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     snackbarStore.trigger('Failed to unarchive school', 'error')
   }
@@ -204,6 +204,7 @@ async function unarchiveSchool(school: School) {
 async function fetchInstructors() {
   try {
     const { data } = await getInstructors()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     instructors.value = data.map((inst: any) => ({
       id: inst.id,
       name: inst.name,
@@ -215,6 +216,7 @@ async function fetchInstructors() {
           : inst.school.split(',').filter(Boolean)
         : [],
     }))
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     snackbarStore.trigger('Failed to load instructors', 'error')
   }
@@ -226,6 +228,7 @@ async function approveInstructor(inst: Instructor) {
     inst.is_active = true
     snackbarStore.trigger('Instructor approved!', 'success')
     fetchInstructors()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     snackbarStore.trigger('Failed to approve instructor', 'error')
   }
@@ -241,6 +244,7 @@ async function assignSchoolsToInstructor() {
       snackbarStore.trigger(`Assigned school(s) to ${assignSchoolInstructor.value.name}`, 'success')
       closeAssignSchoolModal()
       fetchInstructors()
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       snackbarStore.trigger('Failed to assign school(s)', 'error')
     }
@@ -249,13 +253,11 @@ async function assignSchoolsToInstructor() {
 
 async function fetchStudents() {
   try {
-<<<<<<< HEAD
     const { data } = await api.get('/api/users')
-=======
-    const { data } = await axios.get('/api/users')
->>>>>>> d200206 (Initial commit)
     students.value = data
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .filter((u: any) => u.role === 'student')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map((u: any) => ({
         id: u.id,
         name: u.name,
@@ -264,6 +266,7 @@ async function fetchStudents() {
         is_active: u.is_active,
         studentId: u.studentId || '', // Use studentId from backend
       }))
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     snackbarStore.trigger('Failed to load students', 'error')
   }
@@ -403,7 +406,9 @@ watch(showAssignSchoolModal, (val) => {
 })
 
 // Add attendanceRecords and modal state for details
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const attendanceRecords = ref<Record<string, any[]>>({})
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const attendanceModal = ref({ show: false, student: null as Student | null, records: [] as any[] })
 const attendanceFilterDate = ref('')
 const filteredAttendanceRecords = computed(() => {
@@ -425,11 +430,7 @@ function countAttendance(studentId: string, status: 'present' | 'absent'): numbe
 
 // Fetch attendance records for all students on mount
 async function fetchAttendanceRecords(studentId: string) {
-<<<<<<< HEAD
   const { data } = await api.get(`/api/attendance/by-student/${studentId}`)
-=======
-  const { data } = await axios.get(`/api/attendance/by-student/${studentId}`)
->>>>>>> d200206 (Initial commit)
   attendanceRecords.value[studentId] = data
   return data
 }
@@ -836,7 +837,7 @@ function downloadSummaryPerStudent() {
               <td>
                 <span v-if="instructor.school && instructor.school.length">
                   <span
-                    v-for="(schoolName, i) in instructor.school"
+                    v-for="(schoolName) in instructor.school"
                     :key="schoolName"
                     class="inline-block bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 text-xs font-semibold mr-1 mb-1"
                   >

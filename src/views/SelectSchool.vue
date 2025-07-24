@@ -4,11 +4,7 @@ import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 import { useSnackbarStore } from '@/stores/snackbar'
 import { getSchools, updateUser } from '@/services/api'
-import axios from 'axios'
-<<<<<<< HEAD
 import api from '@/services/api'
-=======
->>>>>>> d200206 (Initial commit)
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -44,6 +40,7 @@ async function confirmSelection() {
     setTimeout(() => {
       router.push('/login')
     }, 1200)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     snackbar.trigger('Failed to save school selection', 'error')
   }
@@ -52,7 +49,9 @@ async function confirmSelection() {
 onMounted(async () => {
   try {
     const { data } = await getSchools()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     schools.value = data.map((s: any) => ({ id: String(s.id), name: s.name }))
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     snackbar.trigger('Failed to load schools', 'error')
   }
@@ -62,13 +61,11 @@ onMounted(async () => {
     const email = localStorage.getItem('registeredEmail')
     if (email) {
       try {
-<<<<<<< HEAD
         const { data: users } = await api.get('/api/users')
-=======
-        const { data: users } = await axios.get('/api/users')
->>>>>>> d200206 (Initial commit)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const found = users.find((u: any) => u.email === email)
         if (found) userStore.login(found)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         snackbar.trigger('Failed to load user profile', 'error')
       }
@@ -113,4 +110,4 @@ onMounted(async () => {
       </button>
     </div>
   </div>
-</template> 
+</template>

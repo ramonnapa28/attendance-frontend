@@ -8,6 +8,7 @@ import {
   deleteAdmin as apiDeleteAdmin,
 } from '@/services/api'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const users = ref<any[]>([])
 const usersLoading = ref(false)
 const usersError = ref('')
@@ -18,6 +19,7 @@ async function fetchUsers() {
   try {
     const { data } = await getAllUsers()
     users.value = data
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     usersError.value = e?.response?.data?.detail || 'Failed to load users.'
   } finally {
@@ -98,6 +100,7 @@ async function createAdmin() {
     await apiCreateAdmin(payload)
     closeAdminModal()
     fetchUsers()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     adminFormError.value = e?.response?.data?.detail || 'Failed to create admin.'
   } finally {
@@ -127,6 +130,7 @@ const superAdmin = computed(() => {
     return userStore.user
   }
   // Fallback: find the first superadmin in users array
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return users.value.find((u: any) => u.role === 'superadmin') || {}
 })
 
@@ -143,9 +147,9 @@ function confirmLogout() {
   closeLogoutConfirm()
   router.push('/login')
 }
-function handleLogout() {
-  openLogoutConfirm()
-}
+// function handleLogout() {
+//   openLogoutConfirm()
+// }
 </script>
 
 <template>

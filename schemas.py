@@ -6,13 +6,8 @@ class UserBase(BaseModel):
     name: str
     email: str
     role: str
-<<<<<<< HEAD
     dob: Optional[str] = None
     address: Optional[str] = None
-=======
-    dob: str
-    address: str
->>>>>>> d200206 (Initial commit)
     studentId: Optional[str] = None
     instructorId: Optional[str] = None
     school: Optional[str] = None
@@ -41,17 +36,10 @@ class LoginSchema(BaseModel):
 class User(UserBase):
     id: int
     is_active: bool
-<<<<<<< HEAD
     created_at: Optional[datetime] = None
 
     class Config:
         orm_mode = True
-=======
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
->>>>>>> d200206 (Initial commit)
 
 class SchoolBase(BaseModel):
     name: str
