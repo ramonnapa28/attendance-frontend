@@ -1,21 +1,23 @@
+```vue
 <script setup lang="ts">
 import AttendanceSummary from '@/components/common/AttendanceSummary.vue'
 import QRCodeDisplay from '@/components/common/QRCodeDisplay.vue'
 import { ref, computed, onMounted } from 'vue'
-import api from '@/services/api' // ✅ Use the configured API instance
-
+import api from '@/services/api'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const schools = ref<{ id: string; name: string }[]>([])
 const profile = ref<{
+  id?: string // Numeric ID for student
   name: string
   email: string
   studentId: string
   school?: string
   dob?: string
 }>({
+  id: '',
   name: '',
   email: '',
   studentId: '',
@@ -37,23 +39,20 @@ onMounted(async () => {
   loading.value = true
   error.value = ''
   try {
-    // ✅ Get school list
     const schoolsRes = await api.get('/schools')
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     schools.value = schoolsRes.data.map((s: any) => ({ id: String(s.id), name: s.name }))
-
-    // ✅ Check for user
 
     if (!userStore.user || !userStore.user.email) {
       error.value = 'Not logged in.'
       return
     }
 
-    // ✅ Get profile
     const { data } = await api.post('/auth/profile', {
       email: userStore.user.email,
     })
     profile.value = {
+      id: data.id, // Capture numeric ID
       name: data.name,
       email: data.email,
       studentId: data.studentId || '',
@@ -61,14 +60,11 @@ onMounted(async () => {
       dob: data.dob || '',
     }
 
-
-    // ✅ Get attendance summary
     if (data.id) {
       const summaryRes = await api.get(`/attendance/summary/${data.id}`)
       attendance.value = summaryRes.data
     }
 
-    // ✅ Get attendance records
     if (profile.value.studentId) {
       const recordsRes = await api.get(`/attendance/by-student/${profile.value.studentId}`)
       attendanceRecords.value = recordsRes.data
@@ -104,15 +100,16 @@ const schoolName = computed(() => {
   return found ? found.name : profile.value.school
 })
 
-const BASE_URL = import.meta.env.VITE_FRONTEND_URL || window.location.origin
+// Ensure BASE_URL points to the frontend
+const BASE_URL = import.meta.env.VITE_FRONTEND_URL || 'https://your-frontend-domain.com' // Replace with your actual frontend URL
 const qrValue = computed(() => {
-  const url = profile.value.studentId
-    ? `${BASE_URL}/student-info?id=${encodeURIComponent(profile.value.studentId)}`
+  const url = profile.value.id
+    ? `${BASE_URL}/student-info?id=${encodeURIComponent(profile.value.id)}`
     : ''
+  console.log('BASE_URL:', BASE_URL) // Debug BASE_URL
   console.log('QR Code URL:', url) // Debug QR code URL
   return url
 })
-
 
 const router = useRouter()
 const showLogoutConfirm = ref(false)
@@ -124,9 +121,7 @@ function closeLogoutConfirm() {
   showLogoutConfirm.value = false
 }
 function confirmLogout() {
-
   userStore.logout?.()
-
   closeLogoutConfirm()
   router.push('/login')
 }
@@ -150,7 +145,6 @@ function confirmLogout() {
           class="profile-btn flex items-center justify-center w-12 h-12 rounded-full bg-transparent hover:bg-emerald-50 transition focus:outline-none focus:ring-2 focus:ring-emerald-300"
           aria-label="Logout"
         >
-          <!-- Logout icon only, no text -->
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-8 w-8 text-emerald-700"
@@ -314,7 +308,6 @@ function confirmLogout() {
       >
         <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm relative">
           <div class="flex items-center mb-4">
-            <!-- Logout icon in dialog title -->
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-6 w-6 text-emerald-700 mr-2"
@@ -357,3 +350,4 @@ function confirmLogout() {
   background: transparent !important;
 }
 </style>
+```
