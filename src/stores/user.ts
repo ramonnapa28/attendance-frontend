@@ -50,12 +50,12 @@ export const useUserStore = defineStore('user', () => {
   }
 
   async function fetchProfile() {
-    const { data } = await api.get('api/auth/profile')
+    const { data } = await api.get('/auth/profile')
     login(data.user)
   }
 
   async function logoutApi() {
-    await api.post('api/auth/logout')
+    await api.post('/auth/logout')
     logout()
   }
 
