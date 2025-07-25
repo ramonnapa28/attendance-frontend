@@ -104,7 +104,7 @@ const schoolName = computed(() => {
   return found ? found.name : profile.value.school
 })
 
-const BASE_URL = import.meta.env.VITE_FRONTEND_URL || window.location.origin
+const BASE_URL = import.meta.env.VITE_API_URL || window.location.origin
 const qrValue = computed(() => {
   const url = profile.value.studentId
     ? `${BASE_URL}/student-info?id=${encodeURIComponent(profile.value.studentId)}`
