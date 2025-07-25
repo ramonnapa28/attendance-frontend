@@ -105,11 +105,13 @@ const schoolName = computed(() => {
 })
 
 const BASE_URL = import.meta.env.VITE_FRONTEND_URL || window.location.origin
-const qrValue = computed(() =>
-  profile.value.studentId
+const qrValue = computed(() => {
+  const url = profile.value.studentId
     ? `${BASE_URL}/student-info?id=${encodeURIComponent(profile.value.studentId)}`
-    : '',
-)
+    : ''
+  console.log('QR Code URL:', url) // Debug QR code URL
+  return url
+})
 
 
 const router = useRouter()
