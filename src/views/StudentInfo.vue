@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-// import api from '@/services/api'
-import axios from 'axios'
+import api from '@/services/api'
 
 // Define the Student interface to match the expected API response
 interface Student {
@@ -26,7 +25,7 @@ onMounted(async () => {
   }
 
   try {
-    const { data } = await axios.get(`/students/by-id/${id}`)
+    const { data } = await api.get(`/students/by-id/${id}`)
     // Ensure the API response matches the Student interface
     if (data && typeof data === 'object' && 'id' in data && 'name' in data && 'studentId' in data) {
       student.value = data as Student
