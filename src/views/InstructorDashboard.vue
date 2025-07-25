@@ -189,7 +189,7 @@ async function fetchAllStudents() {
       return
     }
 
-    const { data } = await api.get('/api/users')
+    const { data } = await api.get('/users')
     console.log('All users from API:', data)
 
     // Get instructor's schools (assuming schools are comma-separated)
@@ -287,7 +287,7 @@ const profile = ref<{ name: string; email: string; school?: string; dob?: string
 async function fetchProfile() {
   try {
     if (!userStore.user || !userStore.user.email) return
-    const { data } = await api.post('/api/auth/profile', { email: userStore.user.email })
+    const { data } = await api.post('/auth/profile', { email: userStore.user.email })
     profile.value = {
       name: data.name,
       email: data.email,
@@ -319,7 +319,7 @@ async function resetStudent(student: Student) {
 }
 
 async function fetchAttendanceRecords(studentId: string) {
-  const { data } = await api.get(`/api/attendance/by-student/${studentId}`)
+  const { data } = await api.get(`/attendance/by-student/${studentId}`)
   attendanceRecords.value[studentId] = data
   return data
 }
@@ -338,7 +338,7 @@ async function fetchAttendanceForVisibleStudents() {
 async function markPresent(student: Student) {
   try {
     const now = new Date().toISOString()
-    await api.post('/api/attendance/mark', {
+    await api.post('/attendance/mark', {
       student_id: student.id,
       status: 'present',
       date: now,
@@ -354,7 +354,7 @@ async function markPresent(student: Student) {
 async function markAbsent(student: Student) {
   try {
     const now = new Date().toISOString()
-    await api.post('/api/attendance/mark', {
+    await api.post('/attendance/mark', {
       student_id: student.id,
       status: 'absent',
       date: now,
@@ -380,7 +380,7 @@ function closeAttendanceModal() {
 
 async function approveStudent(student: Student) {
   try {
-    await api.post(`/api/students/approve/${student.id}`)
+    await api.post(`/students/approve/${student.id}`)
     student.is_active = true
     snackbar.trigger('Student approved!', 'success')
     fetchAllStudents()
@@ -496,7 +496,7 @@ function startEditProfile() {
 async function saveProfile() {
   try {
     if (!userStore.user) throw new Error('User not found')
-    await api.put(`/api/users/${userStore.user.id}`, profileForm.value)
+    await api.put(`/users/${userStore.user.id}`, profileForm.value)
     profile.value = { ...profileForm.value }
     editingProfile.value = false
     snackbar.trigger('Profile updated!', 'success')
@@ -813,7 +813,7 @@ async function saveEditAttendance() {
   const { student, newStatus } = editAttendanceModal.value
   if (!student) return
   try {
-    await api.put(`/api/attendance/by-student/${student.studentId}`, { status: newStatus })
+    await api.put(`/attendance/by-student/${student.studentId}`, { status: newStatus })
     snackbar.trigger('Attendance updated!', 'success')
     await fetchAttendanceRecords(student.studentId)
     closeEditAttendanceModal()
