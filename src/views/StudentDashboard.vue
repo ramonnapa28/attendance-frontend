@@ -38,7 +38,7 @@ onMounted(async () => {
   error.value = ''
   try {
     // ✅ Get school list
-    const schoolsRes = await api.get('/api/schools')
+    const schoolsRes = await api.get('/schools')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     schools.value = schoolsRes.data.map((s: any) => ({ id: String(s.id), name: s.name }))
 
@@ -50,7 +50,7 @@ onMounted(async () => {
     }
 
     // ✅ Get profile
-    const { data } = await api.post('/api/auth/profile', {
+    const { data } = await api.post('/auth/profile', {
       email: userStore.user.email,
     })
     profile.value = {
@@ -64,13 +64,13 @@ onMounted(async () => {
 
     // ✅ Get attendance summary
     if (data.id) {
-      const summaryRes = await api.get(`/api/attendance/summary/${data.id}`)
+      const summaryRes = await api.get(`/attendance/summary/${data.id}`)
       attendance.value = summaryRes.data
     }
 
     // ✅ Get attendance records
     if (profile.value.studentId) {
-      const recordsRes = await api.get(`/api/attendance/by-student/${profile.value.studentId}`)
+      const recordsRes = await api.get(`/attendance/by-student/${profile.value.studentId}`)
       attendanceRecords.value = recordsRes.data
     }
   } catch (e) {
