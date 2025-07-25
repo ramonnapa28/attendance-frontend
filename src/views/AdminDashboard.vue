@@ -253,7 +253,7 @@ async function assignSchoolsToInstructor() {
 
 async function fetchStudents() {
   try {
-    const { data } = await api.get('/api/users')
+    const { data } = await api.get('/users')
     students.value = data
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .filter((u: any) => u.role === 'student')
@@ -430,7 +430,7 @@ function countAttendance(studentId: string, status: 'present' | 'absent'): numbe
 
 // Fetch attendance records for all students on mount
 async function fetchAttendanceRecords(studentId: string) {
-  const { data } = await api.get(`/api/attendance/by-student/${studentId}`)
+  const { data } = await api.get(`/attendance/by-student/${studentId}`)
   attendanceRecords.value[studentId] = data
   return data
 }
