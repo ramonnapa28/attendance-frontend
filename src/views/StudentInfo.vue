@@ -25,8 +25,7 @@ onMounted(async () => {
   }
 
   try {
-    const { data } = await api.get(`/students/by-id/${id}`)
-    // Ensure the API response matches the Student interface
+const { data } = await api.get(`/student-info?id=${id}`)    // Ensure the API response matches the Student interface
     if (data && typeof data === 'object' && 'id' in data && 'name' in data && 'studentId' in data) {
       student.value = data as Student
     } else {
