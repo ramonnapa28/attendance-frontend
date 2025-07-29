@@ -104,11 +104,11 @@ const schoolName = computed(() => {
   return found ? found.name : profile.value.school
 })
 
-const BASE_URL = import.meta.env.VITE_API_URL || window.location.origin
+const BASE_URL = import.meta.env.VITE_FRONTEND_URL || window.location.origin
 const qrValue = computed(() => {
   // Just pass the ID instead of duplicating the student info display
   if (!profile.value.studentId) return ''
-  return `${BASE_URL}/student-info/${profile.value.studentId}`
+  return `${BASE_URL}/student-info/${encodeURIComponent(profile.value.studentId)}`
 })
 
 
