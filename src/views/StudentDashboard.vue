@@ -104,13 +104,11 @@ const schoolName = computed(() => {
   return found ? found.name : profile.value.school
 })
 
-const BASE_URL = import.meta.env.VITE_FRONTEND_URL || window.location.origin
+const BASE_URL = import.meta.env.VITE_API_URL || window.location.origin
 const qrValue = computed(() => {
-  const url = profile.value.studentId
-    ? `${BASE_URL}/student-info?id=${encodeURIComponent(profile.value.studentId)}`
-    : ''
-  console.log('QR Code URL:', url) // Debug QR code URL
-  return url
+  // Just pass the ID instead of duplicating the student info display
+  if (!profile.value.studentId) return ''
+  return `${BASE_URL}/student-info/${profile.value.studentId}`
 })
 
 
@@ -305,6 +303,7 @@ function confirmLogout() {
               <h2 class="text-xl font-bold text-emerald-700">Your QR Code</h2>
             </div>
             <QRCodeDisplay :value="qrValue" />
+            <a :href="qrValue" target="_blank" class="mt-2 text-xs text-emerald-600 underline break-all">{{ qrValue }}</a>
           </div>
         </div>
       </div>
