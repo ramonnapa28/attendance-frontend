@@ -25,10 +25,13 @@ onMounted(async () => {
   }
 
   try {
-    const { data } = await api.get('/student-info', {
-      params: { id }
-    })
-    student.value = data as Student
+    const { data } = await api.get(`/students/by-id/${id}`)
+    // Ensure the API response matches the Student interface
+    if (data && typeof data === 'object' && 'id' in data && 'name' in data && 'studentId' in data) {
+      student.value = data as Student
+    } else {
+      throw new Error('Invalid student data')
+    }
   } catch (err) {
     error.value = 'No student found or error occurred.'
     console.error(err)
@@ -36,7 +39,6 @@ onMounted(async () => {
     loading.value = false
   }
 })
-
 </script>
 
 <template>
