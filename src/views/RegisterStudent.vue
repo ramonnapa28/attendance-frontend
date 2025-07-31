@@ -48,6 +48,7 @@ async function onSubmit() {
     setTimeout(() => {
       router.push('/register/student/select-school')
     }, 1000)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     error.value = 'Registration failed'
   }

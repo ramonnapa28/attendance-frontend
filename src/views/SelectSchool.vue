@@ -61,7 +61,7 @@ onMounted(async () => {
     const email = localStorage.getItem('registeredEmail')
     if (email) {
       try {
-        const { data: users } = await api.get('/api/users')
+        const { data: users } = await api.get('/users')
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const found = users.find((u: any) => u.email === email)
         if (found) userStore.login(found)
