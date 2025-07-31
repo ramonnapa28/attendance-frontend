@@ -418,9 +418,18 @@ function confirmLogout() {
       </section>
       <!-- Update Profile (Super Admin Info) -->
       <section v-if="activeSection === 'profile'">
-        <h2 class="section-title flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-500">person</span>Update Profile
-        </h2>
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="section-title flex items-center gap-2 mb-0">
+            <span class="material-symbols-outlined text-emerald-500">person</span>Update Profile
+          </h2>
+          <button
+            v-if="!editMode"
+            @click="startEditProfile"
+            class="action-btn bg-emerald-700 hover:bg-emerald-800 px-4 py-2"
+          >
+            <span class="material-symbols-outlined">edit</span>Edit Profile
+          </button>
+        </div>
         <div class="bg-emerald-50 rounded-xl p-6 max-w-lg mx-auto shadow space-y-4">
           <div v-if="!editMode">
             <div>
@@ -446,14 +455,6 @@ function confirmLogout() {
               <div class="bg-white rounded px-4 py-2 border border-emerald-200">
                 {{ superAdmin.address || '-' }}
               </div>
-            </div>
-            <div class="mt-6">
-              <button
-                @click="startEditProfile"
-                class="action-btn bg-emerald-700 hover:bg-emerald-800 w-full"
-              >
-                <span class="material-symbols-outlined">edit</span>Edit Profile
-              </button>
             </div>
           </div>
 
