@@ -49,6 +49,12 @@ export const useUserStore = defineStore('user', () => {
     login(data.user)
   }
 
+  async function refreshUser() {
+    if (!user.value?.id) return
+    const { data } = await api.get(`/users/${user.value.id}`)
+    login(data)
+  }
+
   async function fetchProfile() {
     const { data } = await api.get('/auth/profile')
     login(data.user)
@@ -65,5 +71,5 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  return { user, isAuthenticated, login, logout, loginApi, registerApi, fetchProfile, logoutApi, setSchool }
+  return { user, isAuthenticated, login, logout, loginApi, registerApi, fetchProfile, logoutApi, setSchool, refreshUser }
 })

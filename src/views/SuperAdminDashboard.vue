@@ -6,6 +6,7 @@ import {
   getAllUsers,
   createAdmin as apiCreateAdmin,
   deleteAdmin as apiDeleteAdmin,
+  updateUser,
 } from '@/services/api'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -133,6 +134,50 @@ const superAdmin = computed(() => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return users.value.find((u: any) => u.role === 'superadmin') || {}
 })
+
+// Profile editing
+const editMode = ref(false)
+const editedProfile = ref({
+  name: '',
+  email: '',
+  dob: '',
+  address: ''
+})
+const profileUpdateLoading = ref(false)
+const profileUpdateError = ref('')
+
+function startEditProfile() {
+  editedProfile.value = {
+    name: superAdmin.value.name || '',
+    email: superAdmin.value.email || '',
+    dob: superAdmin.value.dob || '',
+    address: superAdmin.value.address || ''
+  }
+  editMode.value = true
+}
+
+async function saveProfile() {
+  if (!superAdmin.value.id) return
+
+  profileUpdateLoading.value = true
+  profileUpdateError.value = ''
+  try {
+    await updateUser(superAdmin.value.id, editedProfile.value)
+    editMode.value = false
+    await fetchUsers() // Refresh user data
+    userStore.refreshUser() // Refresh user store
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    profileUpdateError.value = e?.response?.data?.detail || 'Failed to update profile.'
+  } finally {
+    profileUpdateLoading.value = false
+  }
+}
+
+function cancelEdit() {
+  editMode.value = false
+  profileUpdateError.value = ''
+}
 
 const showLogoutConfirm = ref(false)
 function openLogoutConfirm() {
@@ -377,30 +422,103 @@ function confirmLogout() {
           <span class="material-symbols-outlined text-emerald-500">person</span>Update Profile
         </h2>
         <div class="bg-emerald-50 rounded-xl p-6 max-w-lg mx-auto shadow space-y-4">
-          <div>
-            <label class="block text-emerald-700 font-semibold mb-1">Name</label>
-            <div class="bg-white rounded px-4 py-2 border border-emerald-200">
-              {{ superAdmin.name }}
+          <div v-if="!editMode">
+            <div>
+              <label class="block text-emerald-700 font-semibold mb-1">Name</label>
+              <div class="bg-white rounded px-4 py-2 border border-emerald-200">
+                {{ superAdmin.name }}
+              </div>
+            </div>
+            <div class="mt-4">
+              <label class="block text-emerald-700 font-semibold mb-1">Email</label>
+              <div class="bg-white rounded px-4 py-2 border border-emerald-200">
+                {{ superAdmin.email }}
+              </div>
+            </div>
+            <div class="mt-4">
+              <label class="block text-emerald-700 font-semibold mb-1">Date of Birth</label>
+              <div class="bg-white rounded px-4 py-2 border border-emerald-200">
+                {{ superAdmin.dob || '-' }}
+              </div>
+            </div>
+            <div class="mt-4">
+              <label class="block text-emerald-700 font-semibold mb-1">Address</label>
+              <div class="bg-white rounded px-4 py-2 border border-emerald-200">
+                {{ superAdmin.address || '-' }}
+              </div>
+            </div>
+            <div class="mt-6">
+              <button
+                @click="startEditProfile"
+                class="action-btn bg-emerald-700 hover:bg-emerald-800 w-full"
+              >
+                <span class="material-symbols-outlined">edit</span>Edit Profile
+              </button>
             </div>
           </div>
-          <div>
-            <label class="block text-emerald-700 font-semibold mb-1">Email</label>
-            <div class="bg-white rounded px-4 py-2 border border-emerald-200">
-              {{ superAdmin.email }}
+
+          <form v-else @submit.prevent="saveProfile" class="space-y-4">
+            <div>
+              <label class="block text-emerald-700 font-semibold mb-1">Name</label>
+              <input
+                v-model="editedProfile.name"
+                type="text"
+                required
+                class="input w-full"
+                placeholder="Enter your name"
+              />
             </div>
-          </div>
-          <div>
-            <label class="block text-emerald-700 font-semibold mb-1">Date of Birth</label>
-            <div class="bg-white rounded px-4 py-2 border border-emerald-200">
-              {{ superAdmin.dob || '-' }}
+            <div>
+              <label class="block text-emerald-700 font-semibold mb-1">Email</label>
+              <input
+                v-model="editedProfile.email"
+                type="email"
+                required
+                class="input w-full"
+                placeholder="Enter your email"
+              />
             </div>
-          </div>
-          <div>
-            <label class="block text-emerald-700 font-semibold mb-1">Address</label>
-            <div class="bg-white rounded px-4 py-2 border border-emerald-200">
-              {{ superAdmin.address || '-' }}
+            <div>
+              <label class="block text-emerald-700 font-semibold mb-1">Date of Birth</label>
+              <input
+                v-model="editedProfile.dob"
+                type="date"
+                class="input w-full"
+              />
             </div>
-          </div>
+            <div>
+              <label class="block text-emerald-700 font-semibold mb-1">Address</label>
+              <textarea
+                v-model="editedProfile.address"
+                class="input w-full resize-none"
+                rows="3"
+                placeholder="Enter your address"
+              ></textarea>
+            </div>
+
+            <div v-if="profileUpdateError" class="text-red-500 text-sm">
+              {{ profileUpdateError }}
+            </div>
+
+            <div class="flex gap-3">
+              <button
+                type="button"
+                @click="cancelEdit"
+                class="flex-1 px-4 py-2 rounded-lg font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200"
+                :disabled="profileUpdateLoading"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="flex-1 action-btn bg-emerald-700 hover:bg-emerald-800"
+                :disabled="profileUpdateLoading"
+              >
+                <span v-if="profileUpdateLoading">Saving...</span>
+                <span v-else>Save Changes</span>
+              </button>
+            </div>
+          </form>
         </div>
       </section>
     </div>
